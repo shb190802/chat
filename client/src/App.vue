@@ -1,12 +1,12 @@
 <template>
   <div id="app">
+    <span class="app-title">社区群聊</span>
     <div class="wrap">
       <div class="chat-name" v-if="show">
         <div class="name-wrap">
           <input v-model="name" placeholder="姓名" />
           <button @click="sub">确定</button>
         </div>
-
       </div>
       <div class="chat-box">
         <div class="chat" v-for="item in list" :key="item.time">
@@ -16,9 +16,11 @@
       </div>
       <div class="chat-input">
         <div class="tool">
-          <span>上传文件</span>
+          <span @click="show=true">修改名称</span>
+          <span @click="reset">重置</span></span>
+          <span>发送文件</span>
         </div>
-        <textarea v-model="msg" @keydown.enter="send" placeholder="输入消息按回车键" />
+        <textarea v-model="msg" @keydown.enter="send($event)" placeholder="输入消息按回车键" />
         </div>
     </div>
   </div>
@@ -30,13 +32,26 @@ export default {
   name: 'App',
   data () {
     return {
-      show: true,
+      name: localStorage.getItem('userName'),
       msg: '',
-      name: '',
+      show: true,
       list: []
     }
   },
+  watch: {
+
+  },
   mounted () {
+    if (this.name) {
+      this.show = false;
+    }
+    if (this.show) {
+      document.onkeydown = (e) => {
+        if (e.keyCode == 13) {
+          this.sub()
+        }
+      }
+    }
     this.sockets.listener.subscribe('msg', (data) => {
       this.list.push(data)
     })
@@ -47,9 +62,18 @@ export default {
         alert('请先输入姓名！')
         return
       }
+      localStorage.setItem('userName', this.name)
       this.show = false;
     },
-    send () {
+    reset () {
+      localStorage.removeItem('userName')
+      this.name = ''
+      this.show = true;
+      this.list = []
+    },
+    send (e) {
+      var e = e || window.event;
+      e.preventDefault();
       if (!this.name) {
         alert('请先输入姓名！')
         return
@@ -59,6 +83,9 @@ export default {
       this.$socket.emit('send', {
         msg,
         name: this.name
+      })
+      this.$nextTick(() => {
+        console.log(this.msg)
       })
     }
   }
@@ -72,12 +99,17 @@ body {
   padding: 0;
 }
 #app {
-  padding: 50px;
   box-sizing: border-box;
   position: relative;
   width: 100%;
   height: 100vh;
   margin: 0 auto;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+}
+.app-title {
+  margin-top: 20px;
 }
 .wrap {
   width: 700px;
@@ -117,6 +149,7 @@ body {
   padding: 10px;
   font-size: 12px;
   color: #09f;
+  cursor: pointer;
 }
 .chat-input > textarea {
   padding: 10px;
@@ -148,5 +181,8 @@ body {
   margin-top: -200px;
   display: flex;
   align-items: center;
+}
+.chat {
+  padding: 4px 10px;
 }
 </style>
