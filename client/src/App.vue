@@ -12,6 +12,9 @@
     <div class="chat-input">
       <input v-model="msg" @keydown.enter="send" placeholder="输入消息按回车键" />
     </div>
+    <vue-upload active="/upload" name="file" @uploaded="upload" @error="error">
+      <button>upload</button>
+    </vue-upload>
   </div>
 </template>
 
@@ -42,6 +45,12 @@ export default {
         msg,
         name: this.name
       })
+    },
+    upload (res) {
+      console.log(res)
+    },
+    error (res) {
+      console.log(res)
     }
   }
 }
