@@ -6,8 +6,10 @@ Vue.config.productionTip = false
 
 Vue.use(new VueSocketIO({
   debug: true,
-  connection: SocketIO('http://192.168.43.146:80')
+  connection: SocketIO('localhost')
 }))
 new Vue({
-  render: function (h) { return h(App) },
+  render: function (h) {
+    return h(App)
+  },
 }).$mount('#app')
