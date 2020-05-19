@@ -16,14 +16,14 @@
       </div>
       <div class="chat-input">
         <div class="tool">
-          <span>上传文件</span>
+          <vue-upload active="/upload" name="file" @uploaded="upload" @error="error"
+            accept="application/zip,application/x-zip,application/x-zip-compressed">
+            <span>上传文件</span>
+          </vue-upload>
         </div>
         <textarea v-model="msg" @keydown.enter="send" placeholder="输入消息按回车键" />
         </div>
     </div>
-    <vue-upload active="/upload" name="file" @uploaded="upload" @error="error">
-      <button>upload</button>
-    </vue-upload>
   </div>
 
 </template>
@@ -65,7 +65,13 @@ export default {
       })
     },
     upload (res) {
-      console.log(res)
+      res = JSON.parse(res)
+      if (res.state === 'ok') {
+        this.$socket.emit('send', {
+          msg: res.data,
+          name: this.name
+        })
+      }
     },
     error (res) {
       console.log(res)
