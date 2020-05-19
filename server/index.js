@@ -1,7 +1,9 @@
 const Koa = require('koa')
 const KoaBody = require('koa-body')
 const KoaRouter = require('koa-router')
-
+const KoaStatic = require('koa-static')
+const fs = require('fs')
+const path = require('path')
 const app = new Koa()
 const server = require('http').Server(app.callback())
 const io = require('socket.io')(server)
@@ -10,8 +12,6 @@ const port = 80
 const router = new KoaRouter()
 
 router.post('/upload', async ctx => {
-  const fs = require('fs')
-  const path = require('path')
   const file = ctx.request.files.file
   const reader = fs.createReadStream(file.path)
   const fileName = moment().format('YYYYMMDDhhmmss-') + file.name
@@ -23,6 +23,11 @@ router.post('/upload', async ctx => {
     data: fileName
   }
 })
+app.use((ctx, next) => {
+  console.log(ctx.url)
+  next()
+})
+app.use(KoaStatic('../static'))
 app.use(KoaBody({
   multipart: true,
   formidable: {
