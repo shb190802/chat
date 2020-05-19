@@ -7,6 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
+    "shb-vue-upload": "^1.0.1",
     "socket.io-client": "^2.3.0",
     "vue": "^2.6.11",
     "vue-socket.io": "^3.0.9"

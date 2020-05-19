@@ -18,7 +18,10 @@
         <div class="tool">
           <span @click="show=true">修改名称</span>
           <span @click="reset">重置</span></span>
-          <span>发送文件</span>
+          <vue-upload active="/upload" name="file" @uploaded="upload" @error="error"
+            accept="application/zip,application/x-zip,application/x-zip-compressed,application/x-rar-compressed">
+            <span>发送文件</span>
+          </vue-upload>
         </div>
         <textarea v-model="msg" @keydown.enter="send($event)" placeholder="输入消息按回车键" />
         </div>
@@ -83,9 +86,6 @@ export default {
       this.$socket.emit('send', {
         msg,
         name: this.name
-      })
-      this.$nextTick(() => {
-        console.log(this.msg)
       })
     }
   }
