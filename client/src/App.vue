@@ -17,7 +17,7 @@
       <div class="chat-input">
         <div class="tool">
           <vue-upload active="/upload" name="file" @uploaded="upload" @error="error"
-            accept="application/zip,application/x-zip,application/x-zip-compressed">
+            accept="application/zip,application/x-zip,application/x-zip-compressed,application/x-rar-compressed">
             <span>上传文件</span>
           </vue-upload>
         </div>
