@@ -87,6 +87,18 @@ export default {
         msg,
         name: this.name
       })
+    },
+    upload (res) {
+      res = JSON.parse(res)
+      if (res.state === 'ok') {
+        this.$socket.emit('send', {
+          msg: `<a href="/upload/${res.data}">${res.data}</a>`,
+          name: this.name
+        })
+      }
+    },
+    error () {
+      alert('发送失败！')
     }
   }
 }
