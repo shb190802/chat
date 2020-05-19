@@ -1,6 +1,6 @@
 module.exports = {
   publicPath: './',
-  outputDir: '../static/html',
+  outputDir: '../server/static/html',
   devServer: {
     proxy: {
       '/': {

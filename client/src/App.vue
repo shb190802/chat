@@ -11,7 +11,7 @@
       <div class="chat-box">
         <div class="chat" v-for="item in list" :key="item.time">
           <div class="title">{{item.ip}} - {{item.name}}</div>
-          <div class="msg">{{item.msg}}</div>
+          <div class="msg" v-html="item.msg"></div>
         </div>
       </div>
       <div class="chat-input">
@@ -92,7 +92,7 @@ export default {
       res = JSON.parse(res)
       if (res.state === 'ok') {
         this.$socket.emit('send', {
-          msg: `<a href="/upload/${res.data}">${res.data}</a>`,
+          msg: `<a href="/upload/${res.data}" target="_blank">${res.data}</a>`,
           name: this.name
         })
       }
