@@ -1,7 +1,7 @@
 <template>
   <div class="chat-box" ref="chatBox">
     <div class="chat" v-for="(item,i) in list" :key="i">
-      <div class="title">( {{item.ip.slice(7)}} ) {{item.time}} - {{item.name}}</div>
+      <div class="title">( {{item.ip.slice(7) || '未知IP'}} ) {{item.time}} - {{item.name}}</div>
       <div class="msg" v-html="item.msg"></div>
     </div>
   </div>

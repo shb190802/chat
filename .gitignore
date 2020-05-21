@@ -1,3 +1,4 @@
 node_modules
-static*
+server/static/upload/*
+server/static/html/*
 server/db/data
