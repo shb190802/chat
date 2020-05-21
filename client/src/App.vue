@@ -4,22 +4,29 @@
     <div class="wrap">
       <div class="chat-name" v-if="show">
         <div class="name-wrap">
-          <input v-model="name" placeholder="姓名" />
+          <input v-model="name" @keydown.enter="sub" placeholder="姓名" />
           <button @click="sub">确定</button>
         </div>
       </div>
-      <div class="chat-box">
-        <div class="chat" v-for="item in list" :key="item.time">
-          <div class="title">{{item.ip}} - {{item.name}}</div>
-          <div class="msg" v-html="item.msg"></div>
+      <div class="chat-name" v-if="showFile">
+        <div class="file">
+          <div class="file-list">
+            <div class="chat" v-for="(item,i) in fileList" :key="i">
+              <div class="msg" v-html="item"></div>
+            </div>
+          </div>
+          <div class="file-btn">
+            <button @click="showFile=false">关闭</button>
+          </div>
         </div>
       </div>
+      <ChatPanel ref="chatPanel" :list="list" />
       <div class="chat-input">
         <div class="tool">
-          <span @click="show=true">修改名称</span>
-          <span @click="reset">重置</span></span>
-          <vue-upload active="/upload" name="file" @uploaded="upload" @error="error"
-            accept="application/zip,application/x-zip,application/x-zip-compressed,application/x-rar-compressed">
+          <span @click="show=true">修改姓名</span>
+          <span @click="reset">清空</span>
+          <span @click="getFileList">文件列表</span>
+          <vue-upload active="/upload" name="file" @uploaded="upload" @error="error" accept="application/zip,application/x-zip,application/x-zip-compressed,application/x-rar-compressed">
             <span>发送文件</span>
           </vue-upload>
         </div>
@@ -31,33 +38,37 @@
 </template>
 
 <script>
+import axios from 'axios'
+import ChatPanel from './components/ChatPanel.vue'
 export default {
   name: 'App',
+  components: {
+    ChatPanel
+  },
   data () {
     return {
       name: localStorage.getItem('userName'),
       msg: '',
       show: true,
-      list: []
+      list: [],
+      fileList: [],
+      showFile: false
     }
   },
-  watch: {
-
+  created () {
   },
   mounted () {
     if (this.name) {
       this.show = false;
     }
-    if (this.show) {
-      document.onkeydown = (e) => {
-        if (e.keyCode == 13) {
-          this.sub()
-        }
-      }
-    }
-    this.sockets.listener.subscribe('msg', (data) => {
-      this.list.push(data)
+    this.$socket.on('connect', () => {
+      console.log('connect')
     })
+    this.$socket.on('msg', data => {
+      this.list.push(data)
+      this.scroll()
+    })
+    this.getRecord()
   },
   methods: {
     sub () {
@@ -69,9 +80,6 @@ export default {
       this.show = false;
     },
     reset () {
-      localStorage.removeItem('userName')
-      this.name = ''
-      this.show = true;
       this.list = []
     },
     send (e) {
@@ -99,6 +107,30 @@ export default {
     },
     error () {
       alert('发送失败！')
+    },
+    getFileList () {
+      this.showFile = true
+      this.fileList = []
+      axios.get('/files').then(res => {
+        if (res.data.state === 'ok') {
+          this.fileList = res.data.data.map(item => {
+            return `<a href="/upload/${item}" target="_blank">${item}</a>`
+          })
+        }
+      })
+    },
+    getRecord () {
+      axios.get('/record?order=-1').then(res => {
+        if (res.data.state === 'ok') {
+          this.list = res.data.data.data
+          this.scroll()
+        }
+      })
+    },
+    scroll () {
+      this.$nextTick(() => {
+        this.$refs.chatPanel.scroll()
+      })
     }
   }
 }
@@ -132,9 +164,6 @@ body {
   flex-direction: column;
   overflow: hidden;
 }
-.chat-box {
-  flex: 1;
-}
 .chat-input {
   height: 150px;
   border-top: 1px solid #ccc;
@@ -150,8 +179,7 @@ body {
   left: 0;
   width: 100%;
   height: 100vh;
-  background: #333;
-  opacity: 0.7;
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -194,7 +222,24 @@ body {
   display: flex;
   align-items: center;
 }
-.chat {
-  padding: 4px 10px;
+.file {
+  position: relative;
+  width: 400px;
+  height: 500px;
+  border: solid 1px #ccc;
+  background: #fff;
+  border-radius: 4px;
+  box-shadow: #333 1px 1px 4px;
+  display: flex;
+  flex-direction: column;
+}
+.file-list {
+  flex: 1;
+  overflow-y: auto;
+}
+.file-btn {
+  padding: 10px;
+  text-align: center;
+  border-top: 1px #ccc dashed;
 }
 </style>
