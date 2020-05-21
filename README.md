@@ -3,7 +3,7 @@ koa + vue开发的局域网聊天室
 
 支持群聊、文件传输、文件列表、聊天记录（本地存储文本文件模拟数据库）等模块
 
-![effect](D:\study\socket\chat\readme\effect.png)
+![effect](./readme/effect.png)
 
 
 
