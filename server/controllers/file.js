@@ -23,7 +23,7 @@ module.exports.files = async ctx => {
   const uploadPath = path.join(process.cwd(), config.uploadPath)
   try {
     let files = fs.readdirSync(uploadPath)
-    ctx.body = response.succ(files)
+    ctx.body = response.succ(files.filter(item => !config.ignoreFile.includes(item)))
   } catch (e) {
     ctx.body = response.err()
   }

@@ -19,7 +19,6 @@ module.exports.query = (file, { skip = 0, limit = 10, order = 1, all = '' }) => 
             data = data.slice(-limit - skip).slice(0, limit)
         } else {
             data = data.slice(skip, limit)
-
         }
         data = data.map(item => {
             return item ? JSON.parse(item) : {}

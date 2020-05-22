@@ -28,7 +28,7 @@ module.exports.recordDayList = async ctx => {
     const dbPath = path.join(process.cwd(), config.dbPath)
     try {
         let files = fs.readdirSync(dbPath)
-        ctx.body = response.succ(files.map(item => item.replace('.txt', '')))
+        ctx.body = response.succ(files.filter(item => !config.ignoreFile.includes(item)).map(item => item.replace('.txt', '')))
     } catch (e) {
         ctx.body = response.err()
     }
