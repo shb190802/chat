@@ -26,7 +26,8 @@
           <span @click="show=true">修改姓名</span>
           <span @click="reset">清空</span>
           <span @click="getFileList">文件列表</span>
-          <vue-upload active="/upload" name="file" @uploaded="upload" @error="error" accept="application/zip,application/x-zip,application/x-zip-compressed,application/x-rar-compressed">
+          <vue-upload active="/upload" name="file" @uploaded="upload" @error="error"
+            accept="application/zip,application/x-zip,application/x-zip-compressed,application/x-rar-compressed">
             <span>发送文件</span>
           </vue-upload>
         </div>
@@ -68,6 +69,7 @@ export default {
       this.list.push(data)
       this.scroll()
     })
+    this.$pasteImage.onpaste = this.uploadImage
     this.getRecord()
   },
   methods: {
@@ -131,6 +133,25 @@ export default {
       this.$nextTick(() => {
         this.$refs.chatPanel.scroll()
       })
+    },
+    uploadImage (image) {
+      let formData = new FormData()
+      formData.append('file', image)
+      axios({
+        method: 'post',
+        url: '/uploadImage',
+        data: formData,
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }).then(res => {
+        if (res.data.state === 'ok') {
+          this.$socket.emit('send', {
+            msg: `<img class='image' src='/images/${res.data.data}' />`,
+            name: this.name
+          })
+        }
+      })
     }
   }
 }
@@ -141,6 +162,12 @@ html,
 body {
   margin: 0;
   padding: 0;
+}
+.image {
+  border: solid 2px #000;
+  margin: 10px;
+  max-width: 95%;
+  height: auto;
 }
 #app {
   box-sizing: border-box;

@@ -18,6 +18,21 @@ module.exports.upload = async ctx => {
     ctx.body = response.err()
   }
 }
+// 图片上传
+module.exports.uploadImage = async ctx => {
+  try {
+    const file = ctx.request.files.file
+    const reader = fs.createReadStream(file.path)
+    const fileName = moment().format('YYYYMMDDHHmmss-') + file.name
+    console.log(file)
+    const filePath = path.join(process.cwd(), config.uploadImagePath, fileName)
+    const upStream = fs.createWriteStream(filePath)
+    reader.pipe(upStream)
+    ctx.body = response.succ(fileName)
+  } catch (e) {
+    ctx.body = response.err()
+  }
+}
 // 文件列表
 module.exports.files = async ctx => {
   const uploadPath = path.join(process.cwd(), config.uploadPath)

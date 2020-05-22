@@ -3,5 +3,7 @@ server/static/upload/*
 !server/static/upload/.gitkeep
 server/static/html/*
 !server/static/html/.gitkeep
+server/static/images/*
+!server/static/images/.gitkeep
 server/db/data/*
 !server/db/data/.gitkeep
