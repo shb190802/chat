@@ -1,4 +1,7 @@
 node_modules
-server/static/upload/
-server/static/html/
-server/db/data/
+server/static/upload/*
+!server/static/upload/.gitkeep
+server/static/html/*
+!server/static/html/.gitkeep
+server/db/data/*
+!server/db/data/.gitkeep
