@@ -51,4 +51,29 @@ npm run serve // 启动服务，默认在80端口
   ```
 
   
+### 部署
 
+使用pm2来管理node服务
+
+  ```bat
+  npm i -g pm2
+
+  cd server 
+  pm2 start app.js
+  ```
+
+
+
+如果是在window开发机器上部署，每次重启都需要启动node服务
+
+我们可以将其配置到开机启动项里边
+
+1. 按 Win + R 打开运行目录输入：shell:startup 进入启动项目录
+2. 邮件新建txt文件，重命名问startup_chat.bat
+3. 找到你项目存放的文件（我存在E盘 根目录下）
+4. startup_chat.bat输入以下内容保存
+```bat
+E:
+cd E:\chat\server
+pm2 start app.js
+```
