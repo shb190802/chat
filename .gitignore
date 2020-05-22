@@ -1,4 +1,4 @@
 node_modules
-server/static/upload/*
-server/static/html/*
-server/db/data/*
+server/static/upload/*.*
+server/static/html/*.*
+server/db/data/*.txt
