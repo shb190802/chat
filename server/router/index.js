@@ -4,6 +4,7 @@ const record = require('../controllers/record')
 
 module.exports = () => {
     const router = new KoaRouter()
+    router.get('/', ctx => { ctx.response.redirect('/html') })
     router.post('/upload', file.upload)
     router.get('/files', file.files)
     router.get('/record', record.record)
