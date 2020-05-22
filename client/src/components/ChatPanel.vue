@@ -35,4 +35,7 @@ export default {
 .chat {
   padding: 4px 10px;
 }
+.msg {
+  margin: 10px;
+}
 </style>

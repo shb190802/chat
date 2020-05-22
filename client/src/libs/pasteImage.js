@@ -1,7 +1,6 @@
 class PasteImage {
   constructor() {
     this.responseType = 'bolb'
-    this.data = ''
     this.init()
   }
   init () {
